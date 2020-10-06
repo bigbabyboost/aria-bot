@@ -1,4 +1,4 @@
-from bot import aria2, download_dict_lock
+from bot import aria2
 from bot.helper.ext_utils.bot_utils import *
 from .download_helper import DownloadHelper
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
@@ -48,7 +48,7 @@ class AriaDownloadHelper(DownloadHelper):
 
     @new_thread
     def __onDownloadError(self, api, gid):
-        sleep(0.5)  # sleep for split second to ensure proper dl gid update from onDownloadComplete
+        sleep(0.5) #sleep for split second to ensure proper dl gid update from onDownloadComplete
         LOGGER.info(f"onDownloadError: {gid}")
         dl = getDownloadByGid(gid)
         download = api.get_download(gid)
@@ -69,10 +69,10 @@ class AriaDownloadHelper(DownloadHelper):
             download = aria2.add_magnet(link, {'dir': path})
         else:
             download = aria2.add_uris([link], {'dir': path})
-        if download.error_message:  # no need to proceed further at this point
+        if download.error_message: #no need to proceed further at this point
             listener.onDownloadError(download.error_message)
-            return
+            return 
         with download_dict_lock:
-            download_dict[listener.uid] = AriaDownloadStatus(download.gid, listener)
+            download_dict[listener.uid] = AriaDownloadStatus(download.gid,listener)
             LOGGER.info(f"Started: {download.gid} DIR:{download.dir} ")
 

@@ -7,6 +7,8 @@ import aria2p
 import telegram.ext as tg
 from dotenv import load_dotenv
 import socket
+import faulthandler
+faulthandler.enable()
 
 socket.setdefaulttimeout(600)
 
@@ -79,6 +81,21 @@ try:
 except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
+
+try:
+    MEGA_API_KEY = getConfig('MEGA_API_KEY')
+except KeyError:
+    logging.warning('MEGA API KEY not provided!')
+    MEGA_API_KEY = None
+try:
+    MEGA_EMAIL_ID = getConfig('MEGA_EMAIL_ID')
+    MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
+    if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0:
+        raise KeyError
+except KeyError:
+    logging.warning('MEGA Credentials not provided!')
+    MEGA_EMAIL_ID = None
+    MEGA_PASSWORD = None
 try:
     INDEX_URL = getConfig('INDEX_URL')
     if len(INDEX_URL) == 0:
